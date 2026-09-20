@@ -1,0 +1,48 @@
+@dc:title "Clinical AXIS Stakeholders Description"
+@dc:description "Concrete instances of WHO (stakeholders) and WHY (governance requirements)."
+description <http://clinical-axis.org/model/stakeholders#> as stakeholders {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://clinical-axis.org/method/governance#> as governance
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Stakeholder Roles (WHO)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:title "Dr. Sarah Chen, Lead ML Architect"
+    @dc:description "Responsible for model training, offline validation, and calibration benchmarks."
+    instance chief-ml-engineer : governance:TechnicalRole []
+
+    @dc:title "Dr. Marcus Vance, Chief of Critical Care"
+    @dc:description "Defines workflow integration, clinical utility thresholds, and escalation protocols."
+    instance clinical-lead : governance:ClinicalRole []
+
+    @dc:title "Elena Rostova, Senior Data Platform Engineer"
+    @dc:description "Maintains HL7/FHIR streaming ingestion pipelines, latency benchmarks, and data schemas."
+    instance data-ops-engineer : governance:TechnicalRole []
+
+    @dc:title "Hospital Clinical AI Oversight Board"
+    @dc:description "Authorizes stage gate progression, safety approvals, and patient-risk governance."
+    instance institutional-review-board : governance:GovernanceBody []
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Stakeholder Requirements (WHY)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:title "Sub-second Streaming Latency Requirement"
+    @dc:description "Mandates that live feature transformation and inference take less than 500ms."
+    instance latency-requirement : governance:PerformanceRequirement [
+        governance:mandatedByRole data-ops-engineer
+    ]
+
+    @dc:title "Demographic Parity & Fairness Requirement"
+    @dc:description "Mandates that sensitivity disparity across demographic cohorts remains below 5 percent."
+    instance subgroup-fairness-requirement : governance:EquityRequirement [
+        governance:mandatedByRole institutional-review-board
+    ]
+
+    @dc:title "Clinician Workflow Override Safety Protocol"
+    @dc:description "Requires formal failure-mode protocols ensuring uninterrupted clinician overrides without delay."
+    instance clinical-override-safety-requirement : governance:SafetyRequirement [
+        governance:mandatedByRole clinical-lead
+    ]
+}

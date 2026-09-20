@@ -1,0 +1,37 @@
+@dc:title "Clinical AXIS Components Description"
+@dc:description "Concrete instances of the atomic technical and clinical components (WHAT)."
+description <http://clinical-axis.org/model/components#> as components {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://clinical-axis.org/method/components#> as comp
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Atomic System Components (WHAT)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:title "Sepsis Early Warning XGBoost Model"
+    @dc:description "Gradient boosted decision tree predicting 6-hour sepsis risk from vital signs and lab results."
+    instance sepsis-xgboost-model : comp:AiModel [
+        comp:hasAlgorithmType "CLASSIFICATION"
+    ]
+
+    @dc:title "MIMIC-IV Retrospective Batch Pipeline"
+    @dc:description "Historical ETL pipeline extracting normalized features from retrospective EHR data warehouses."
+    instance retrospective-batch-pipeline : comp:DataPipeline [
+        comp:hasPipelineMode "BATCH_HISTORICAL"
+    ]
+
+    @dc:title "Real-Time FHIR Vital Stream Pipeline"
+    @dc:description "Sub-second streaming pipeline transforming live bedside monitor FHIR observations into feature vectors."
+    instance live-fhir-streaming-pipeline : comp:LiveInferencePipeline [
+        comp:hasPipelineMode "STREAMING_REALTIME"
+        comp:hasLatencyToleranceMs 500
+    ]
+
+    @dc:title "EHR Clinical Decision Support Notification Card"
+    @dc:description "Embedded EHR user interface component presenting sepsis alert probability and risk factor SHAP values."
+    instance ehr-alert-card : comp:HciComponent []
+
+    @dc:title "ICU Rapid Response Escalation Pathway"
+    @dc:description "Standard operating procedure triggering bedside clinical review and lactate protocol upon high-risk alert."
+    instance rapid-response-protocol : comp:ClinicalWorkflow []
+}

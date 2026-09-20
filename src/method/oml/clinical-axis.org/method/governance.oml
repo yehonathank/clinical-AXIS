@@ -1,0 +1,72 @@
+// TODO: Ontological Alignment (PROV-O - http://www.w3.org/ns/prov#)
+// - StakeholderRole specializes prov:Agent
+//   - TechnicalRole / ClinicalRole -> prov:Person
+//   - GovernanceBody -> prov:Organization
+// - StakeholderRequirement specializes prov:Entity (or prov:Plan / prov:Role constraints)
+// - mandatedByRole aligns to prov:wasAttributedTo
+
+@dc:title "Clinical AXIS Governance Vocabulary"
+@dc:description "Defines stakeholders (WHO) and their specific requirements and policies (WHY)."
+vocabulary <http://clinical-axis.org/method/governance#> as governance {
+    extends <http://purl.org/dc/elements/1.1/> as dc
+    extends <http://clinical-axis.org/method/base#> as base
+    extends <http://clinical-axis.org/method/components#> as components
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Sibling Taxonomies: WHO (Stakeholder Roles)
+    // NOTE: Sibling concepts under StakeholderRole are asserted disjoint 
+    // by the reasoner through the vocabulary bundle closure axioms.
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "An individual or institutional actor involved in deployment (WHO)."
+    concept StakeholderRole < base:IdentifiedElement
+
+    @dc:description "A technical role responsible for software, models, or data pipelines."
+    concept TechnicalRole < StakeholderRole
+
+    @dc:description "A clinician or healthcare specialist directly interacting with the system."
+    concept ClinicalRole < StakeholderRole
+
+    @dc:description "An institutional committee or board authorizing stage gate advancement."
+    concept GovernanceBody < StakeholderRole
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Sibling Taxonomies: WHY (Stakeholder Requirements)
+    // NOTE: Sibling concepts under StakeholderRequirement are asserted disjoint 
+    // by the reasoner through the vocabulary bundle closure axioms.
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "A specific operational, safety, or clinical requirement (WHY)."
+    concept StakeholderRequirement < base:IdentifiedElement
+
+    @dc:description "Requirement enforcing fairness across demographic and clinical subgroups."
+    concept EquityRequirement < StakeholderRequirement
+
+    @dc:description "Requirement mandating runtime performance, stability, and latency thresholds."
+    concept PerformanceRequirement < StakeholderRequirement
+
+    @dc:description "Requirement mandating clinical hazard mitigation and safety protocols."
+    concept SafetyRequirement < StakeholderRequirement
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Relations (with Irreflexive & Asymmetric Property Characteristics)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Links a requirement to the stakeholder role that mandates or defines it."
+    relation mandatedByRole [
+        from StakeholderRequirement
+        to StakeholderRole
+        reverse mandatesRequirement
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Specifies the atomic WHAT component targeted by this requirement."
+    relation targetsComponent [
+        from StakeholderRequirement
+        to components:SalientComponent
+        reverse hasRequirement
+        asymmetric
+        irreflexive
+    ]
+}

@@ -1,0 +1,23 @@
+@dc:title "Clinical AXIS Base Vocabulary"
+@dc:description "Foundational aspects, traits, and universal naming properties for Clinical AXIS."
+vocabulary <http://clinical-axis.org/method/base#> as base {
+    extends <http://purl.org/dc/elements/1.1/> as dc
+    extends <http://www.w3.org/2001/XMLSchema#> as xsd
+
+    @dc:description "A reusable trait for any identified entity in the system."
+    aspect IdentifiedElement
+
+    @dc:description "The canonical human-readable name of an identified element."
+    scalar property name [
+        domain IdentifiedElement
+        range xsd:string
+        functional
+    ]
+
+    @dc:description "A description or definition documenting an identified element."
+    scalar property definition [
+        domain IdentifiedElement
+        range xsd:string
+        functional
+    ]
+}

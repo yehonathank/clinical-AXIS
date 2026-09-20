@@ -1,0 +1,54 @@
+@dc:title "Clinical AXIS Lifecycle Vocabulary"
+@dc:description "Defines transitional lifecycle stages and chronological sequencing across the SALIENT When dimension."
+vocabulary <http://clinical-axis.org/method/lifecycle#> as lifecycle {
+    extends <http://purl.org/dc/elements/1.1/> as dc
+    extends <http://clinical-axis.org/method/base#> as base
+    extends <http://clinical-axis.org/method/components#> as components
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Sibling Taxonomies (The WHEN)
+    // NOTE: All 5 sibling stages under LifecycleStage are asserted disjoint 
+    // by the reasoner through the vocabulary bundle closure axioms.
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "A designated evolutionary phase or evaluation gate in clinical AI deployment."
+    concept LifecycleStage < base:IdentifiedElement
+
+    @dc:description "Stage I: Feasibility, problem definition, and clinical scope."
+    concept DefinitionStage < LifecycleStage
+
+    @dc:description "Stage II: In-silico model training and retrospective validation phase."
+    concept RetrospectiveStage < LifecycleStage
+
+    @dc:description "Stage III: Shadow deployment phase evaluating live streams without clinician alerting."
+    concept SilentTrialStage < LifecycleStage
+
+    @dc:description "Stage IV: Prospective pilot interventional evaluation in a live clinical setting."
+    concept PilotTrialStage < LifecycleStage
+
+    @dc:description "Stage V: Routine use and longitudinal post-market surveillance phase."
+    concept RoutineUseStage < LifecycleStage
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Relations (with Property Characteristics)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Defines linear progression from an upstream stage to a downstream stage."
+    relation precedesStage [
+        from LifecycleStage
+        to LifecycleStage
+        reverse followsStage
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Links an assembly to the single lifecycle stage at which it is currently evaluated."
+    relation evaluatedAtStage [
+        from components:Assembly
+        to LifecycleStage
+        reverse evaluatesAssembly
+        functional
+        asymmetric
+        irreflexive
+    ]
+}

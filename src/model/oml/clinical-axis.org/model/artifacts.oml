@@ -1,0 +1,57 @@
+@dc:title "Clinical AXIS Verification Artifacts Description"
+@dc:description "Concrete instances of HOW (verification deliverables, audits, and test benchmarks)."
+description <http://clinical-axis.org/model/artifacts#> as artifacts {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://clinical-axis.org/method/verification#> as ver
+    
+    extends <http://clinical-axis.org/model/components#> as comp_inst
+    extends <http://clinical-axis.org/model/stakeholders#> as sh_inst
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Verification Deliverables (HOW)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:title "Live FHIR Streaming Latency Benchmark Report"
+    @dc:description "End-to-end load testing confirming 99th percentile inference latency is under 350ms."
+    instance streaming-latency-report : ver:LatencyThroughputReport [
+        ver:verifiesComponent comp_inst:live-fhir-streaming-pipeline
+        ver:satisfiesRequirement sh_inst:latency-requirement
+        ver:producedByRole sh_inst:data-ops-engineer
+        ver:approvedByBody sh_inst:institutional-review-board
+        ver:hasVerificationStatus "VERIFIED"
+        ver:isGateApproved true
+        ver:hasObservedLatencyMs 320
+    ]
+
+    @dc:title "Retrospective Calibration & Discrimination Evaluation Report"
+    @dc:description "TRIPOD-compliant validation reporting an AUROC of 0.88 and Brier score calibration."
+    instance retrospective-calibration-report : ver:ModelCalibrationReport [
+        ver:verifiesComponent comp_inst:sepsis-xgboost-model
+        ver:producedByRole sh_inst:chief-ml-engineer
+        ver:approvedByBody sh_inst:institutional-review-board
+        ver:hasVerificationStatus "VERIFIED"
+        ver:isGateApproved true
+    ]
+
+    @dc:title "Demographic Fairness and Subgroup Disparity Audit"
+    @dc:description "Audit showing error rate parity within a 3.2 percent margin across demographic cohorts."
+    instance subgroup-fairness-audit : ver:SubgroupFairnessAuditReport [
+        ver:verifiesComponent comp_inst:sepsis-xgboost-model
+        ver:satisfiesRequirement sh_inst:subgroup-fairness-requirement
+        ver:producedByRole sh_inst:chief-ml-engineer
+        ver:approvedByBody sh_inst:institutional-review-board
+        ver:hasVerificationStatus "VERIFIED"
+        ver:isGateApproved true
+    ]
+
+    @dc:title "Clinical Workflow Failure Modes & Effects Analysis (FMEA)"
+    @dc:description "Evaluation of alert fatigue and fallback procedures ensuring rapid bedside manual override."
+    instance workflow-fmea-report : ver:FailureModeAnalysisReport [
+        ver:verifiesComponent comp_inst:rapid-response-protocol
+        ver:satisfiesRequirement sh_inst:clinical-override-safety-requirement
+        ver:producedByRole sh_inst:clinical-lead
+        ver:approvedByBody sh_inst:institutional-review-board
+        ver:hasVerificationStatus "VERIFIED"
+        ver:isGateApproved true
+    ]
+}

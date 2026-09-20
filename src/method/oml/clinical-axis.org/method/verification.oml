@@ -1,0 +1,147 @@
+// TODO: Ontological Alignment (PROV-O - http://www.w3.org/ns/prov#)
+// - VerificationArtifact specializes prov:Entity
+// - producedByRole aligns to prov:wasAttributedTo (or prov:wasGeneratedBy -> prov:Activity)
+// - satisfiesRequirement / verifiesComponent align to prov:wasDerivedFrom
+
+@dc:title "Clinical AXIS Verification Vocabulary"
+@dc:description "Defines verification artifacts (HOW) and connects assemblies, requirements, and stage gates."
+vocabulary <http://clinical-axis.org/method/verification#> as verification {
+    extends <http://purl.org/dc/elements/1.1/> as dc
+    extends <http://www.w3.org/2001/XMLSchema#> as xsd
+    extends <http://clinical-axis.org/method/base#> as base
+    extends <http://clinical-axis.org/method/components#> as components
+    extends <http://clinical-axis.org/method/governance#> as governance
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Closed Enumerations
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Closed enumeration of verification states."
+    scalar VerificationStatus [
+        oneOf "PENDING", "VERIFIED", "FAILED", "BLOCKED"
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Sibling Taxonomies: HOW (Verification Artifacts)
+    // NOTE: Sibling concepts under VerificationArtifact are asserted disjoint 
+    // by the reasoner through the vocabulary bundle closure axioms.
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "A documented test report, audit log, or verification artifact (HOW)."
+    concept VerificationArtifact < base:IdentifiedElement
+
+    @dc:description "Benchmark report evaluating pipeline throughput and response latency."
+    concept LatencyThroughputReport < VerificationArtifact
+
+    @dc:description "Statistical evaluation report detailing calibration and discrimination."
+    concept ModelCalibrationReport < VerificationArtifact
+
+    @dc:description "Audit of model accuracy and error parity across demographic subgroups."
+    concept SubgroupFairnessAuditReport < VerificationArtifact
+
+    @dc:description "Systematic assessment of failure modes, fallback procedures, and risk."
+    concept FailureModeAnalysisReport < VerificationArtifact
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Defined Concepts (= with Restriction) - Deliverable 2, Req 4
+    // Lets the reasoner classify instead of hand-asserting.
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "A verification artifact that has been reviewed and signed off by a governance body."
+    concept ApprovedVerificationArtifact = VerificationArtifact [
+        restricts some approvedByBody to governance:GovernanceBody
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Scalar Properties (Functional)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "The formal verification status of the artifact."
+    scalar property hasVerificationStatus [
+        domain VerificationArtifact
+        range VerificationStatus
+        functional
+    ]
+
+    @dc:description "True if the artifact has received sign-off from the oversight body."
+    scalar property isGateApproved [
+        domain VerificationArtifact
+        range xsd:boolean
+        functional
+    ]
+
+    @dc:description "Observed latency in milliseconds recorded during stage testing."
+    scalar property hasObservedLatencyMs [
+        domain LatencyThroughputReport
+        range xsd:integer
+        functional
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Relations (with Irreflexive & Asymmetric Property Characteristics)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Links an assembly to the verification artifacts it must produce at its stage."
+    relation requiresArtifact [
+        from components:Assembly
+        to VerificationArtifact
+        reverse verifiesAssembly
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Links an artifact to the specific component inside the assembly that it tests."
+    relation verifiesComponent [
+        from VerificationArtifact
+        to components:SalientComponent
+        reverse verifiedByArtifact
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Links an artifact to the stakeholder requirement (WHY) that it satisfies."
+    relation satisfiesRequirement [
+        from VerificationArtifact
+        to governance:StakeholderRequirement
+        reverse satisfiedByArtifact
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Links an artifact to the role that produced it."
+    relation producedByRole [
+        from VerificationArtifact
+        to governance:StakeholderRole
+        reverse producedArtifact
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Links an artifact to the governance body that reviewed and approved it."
+    relation approvedByBody [
+        from VerificationArtifact
+        to governance:GovernanceBody
+        reverse approvedArtifact
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Derived relation linking an assembly directly to a requirement it satisfies via an artifact."
+    relation fulfillsRequirement [
+        from components:Assembly
+        to governance:StakeholderRequirement
+        reverse fulfilledByAssembly
+        asymmetric
+        irreflexive
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Rules - Deliverable 2, Req 5
+    // Derives facts automatically across the 3+ level traceability chain.
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Infers that an assembly fulfills a requirement if it requires an artifact satisfying that requirement."
+    rule AssemblyFulfillsRequirement [
+        requiresArtifact(a, v) & satisfiesRequirement(v, r) -> fulfillsRequirement(a, r)
+    ]
+}

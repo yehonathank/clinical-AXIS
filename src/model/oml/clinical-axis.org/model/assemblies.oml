@@ -1,0 +1,41 @@
+@dc:title "Clinical AXIS System Assemblies Description"
+@dc:description "Concrete instances of integrated technical systems and end-to-end clinical solutions."
+description <http://clinical-axis.org/model/assemblies#> as assemblies {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://clinical-axis.org/method/components#> as comp
+    uses <http://clinical-axis.org/method/lifecycle#> as lifecycle
+    uses <http://clinical-axis.org/method/verification#> as ver
+
+    extends <http://clinical-axis.org/model/components#> as comp_inst
+    extends <http://clinical-axis.org/model/stages#> as stage_inst
+    extends <http://clinical-axis.org/model/artifacts#> as art_inst
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Technical System Assembly
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:title "Sepsis Real-Time Inference Technical Subsystem"
+    @dc:description "Integrated predictive technical system combining streaming FHIR data ingestion with the XGBoost scoring engine."
+    instance sepsis-inference-technical-system : comp:TechnicalSystem [
+        comp:aggregatesComponent comp_inst:sepsis-xgboost-model
+        comp:aggregatesComponent comp_inst:live-fhir-streaming-pipeline
+        lifecycle:evaluatedAtStage stage_inst:stage-3-silent-trial
+        ver:requiresArtifact art_inst:streaming-latency-report
+        ver:requiresArtifact art_inst:retrospective-calibration-report
+        ver:requiresArtifact art_inst:subgroup-fairness-audit
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // End-to-End Clinical Solution (Recursive Assembly Hierarchy)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:title "Hospital-Wide Sepsis Early Intervention Clinical Solution"
+    @dc:description "Full sociotechnical clinical deployment integrating the technical inference engine, EHR alert cards, and rapid escalation protocols."
+    instance sepsis-early-intervention-solution : comp:ClinicalSolution [
+        comp:incorporatesTechnicalSystem sepsis-inference-technical-system
+        comp:aggregatesComponent comp_inst:ehr-alert-card
+        comp:aggregatesComponent comp_inst:rapid-response-protocol
+        lifecycle:evaluatedAtStage stage_inst:stage-4-pilot-trial
+        ver:requiresArtifact art_inst:workflow-fmea-report
+    ]
+}

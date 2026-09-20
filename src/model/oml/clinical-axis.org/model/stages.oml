@@ -1,0 +1,38 @@
+@dc:title "Clinical AXIS Lifecycle Stages Description"
+@dc:description "Concrete instances of the 5 evolutionary evaluation stage gates (WHEN)."
+description <http://clinical-axis.org/model/stages#> as stages {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://clinical-axis.org/method/lifecycle#> as lifecycle
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Stage Gates (WHEN) - Stead Taxonomy / SALIENT
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:title "Stage I: Clinical Problem & Feasibility Definition"
+    @dc:description "Formulates clinical scope, intended use populations, baseline risk, and feasibility metrics."
+    instance stage-1-definition : lifecycle:DefinitionStage [
+        lifecycle:precedesStage stage-2-retrospective
+    ]
+
+    @dc:title "Stage II: In-Silico Retrospective Validation"
+    @dc:description "Offline model training, calibration curves, discrimination benchmarks, and cohort testing."
+    instance stage-2-retrospective : lifecycle:RetrospectiveStage [
+        lifecycle:precedesStage stage-3-silent-trial
+    ]
+
+    @dc:title "Stage III: Shadow / Silent Trial"
+    @dc:description "Evaluates real-time streaming pipelines in hospital shadow mode with zero clinician alerts."
+    instance stage-3-silent-trial : lifecycle:SilentTrialStage [
+        lifecycle:precedesStage stage-4-pilot-trial
+    ]
+
+    @dc:title "Stage IV: Prospective Pilot Clinical Evaluation"
+    @dc:description "Interventional pilot deploying live alert cards into clinician workflows to assess clinical utility."
+    instance stage-4-pilot-trial : lifecycle:PilotTrialStage [
+        lifecycle:precedesStage stage-5-routine-use
+    ]
+
+    @dc:title "Stage V: Routine Multi-Site Clinical Deployment"
+    @dc:description "Institutional routine care integration accompanied by continuous drift and safety surveillance."
+    instance stage-5-routine-use : lifecycle:RoutineUseStage []
+}

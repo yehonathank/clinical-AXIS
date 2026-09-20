@@ -1,0 +1,113 @@
+@dc:title "Clinical AXIS Components Vocabulary"
+@dc:description "Defines atomic building blocks and integrated system assemblies across the WHAT dimension."
+vocabulary <http://clinical-axis.org/method/components#> as components {
+    extends <http://purl.org/dc/elements/1.1/> as dc
+    extends <http://www.w3.org/2001/XMLSchema#> as xsd
+    extends <http://clinical-axis.org/method/base#> as base
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Closed Enumerations
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Closed enumeration of algorithm families for AI models."
+    scalar ModelAlgorithmType [
+        oneOf "REGRESSION", "CLASSIFICATION", "DEEP_LEARNING"
+    ]
+
+    @dc:description "Closed enumeration of pipeline operational modes."
+    scalar PipelineMode [
+        oneOf "BATCH_HISTORICAL", "STREAMING_REALTIME"
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Sibling Taxonomies (The WHAT)
+    // NOTE: Sibling concepts under SalientComponent and Assembly are asserted 
+    // disjoint by the reasoner through the vocabulary bundle closure axioms.
+    //
+    // TODO: Ontological Alignment (SWO - Software Ontology: http://purl.obolibrary.org/obo/swo.owl)
+    // - SalientComponent aligns with swo:SWO_0000001 (software)
+    // - AiModel aligns with swo:algorithm implementations
+    // - DataPipeline aligns with swo:data processing software
+    // - Assembly aligns with integrated software suites
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "An atomic component of the clinical AI solution (WHAT)."
+    concept SalientComponent < base:IdentifiedElement
+
+    @dc:description "The algorithmic model architecture and parameters."
+    concept AiModel < SalientComponent
+
+    @dc:description "Data ingestion, cleaning, and transformation pipelines."
+    concept DataPipeline < SalientComponent
+
+    @dc:description "A real-time data ingestion pipeline feeding live inferences."
+    concept LiveInferencePipeline < DataPipeline
+
+    @dc:description "Human-computer interface presentation to clinicians."
+    concept HciComponent < SalientComponent
+
+    @dc:description "Clinical protocol, escalation workflow, or patient care pathway."
+    concept ClinicalWorkflow < SalientComponent
+
+    @dc:description "An integrated composition of components evaluated together."
+    concept Assembly < base:IdentifiedElement
+
+    @dc:description "Technical system assembly comprising AI models and data pipelines."
+    concept TechnicalSystem < Assembly [
+        restricts some aggregatesComponent to AiModel
+        restricts some aggregatesComponent to LiveInferencePipeline
+    ]
+
+    @dc:description "End-to-end clinical solution comprising technical systems, HCI, and workflow."
+    concept ClinicalSolution < Assembly [
+        restricts some aggregatesComponent to ClinicalWorkflow
+        restricts some incorporatesTechnicalSystem to TechnicalSystem
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Scalar Properties (Functional)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Underlying algorithm type of an AI model."
+    scalar property hasAlgorithmType [
+        domain AiModel
+        range ModelAlgorithmType
+        functional
+    ]
+
+    @dc:description "Operational execution mode of a data pipeline."
+    scalar property hasPipelineMode [
+        domain DataPipeline
+        range PipelineMode
+        functional
+    ]
+
+    @dc:description "Maximum latency tolerance in milliseconds."
+    scalar property hasLatencyToleranceMs [
+        domain LiveInferencePipeline
+        range xsd:integer
+        functional
+    ]
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Relations (with Irreflexive & Asymmetric Property Characteristics)
+    /////////////////////////////////////////////////////////////////////////////
+
+    @dc:description "Links an assembly to an atomic component it contains."
+    relation aggregatesComponent [
+        from Assembly
+        to SalientComponent
+        reverse isComponentOf
+        asymmetric
+        irreflexive
+    ]
+
+    @dc:description "Links a clinical solution to an underlying technical system."
+    relation incorporatesTechnicalSystem [
+        from ClinicalSolution
+        to TechnicalSystem
+        reverse isTechnicalSystemIn
+        asymmetric
+        irreflexive
+    ]
+}
