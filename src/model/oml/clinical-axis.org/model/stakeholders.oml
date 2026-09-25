@@ -4,6 +4,8 @@ description <http://clinical-axis.org/model/stakeholders#> as stakeholders {
     uses <http://purl.org/dc/elements/1.1/> as dc
     uses <http://clinical-axis.org/method/governance#> as governance
 
+    extends <http://clinical-axis.org/model/components#> as comp_inst
+
     /////////////////////////////////////////////////////////////////////////////
     // Stakeholder Roles (WHO)
     /////////////////////////////////////////////////////////////////////////////
@@ -32,17 +34,20 @@ description <http://clinical-axis.org/model/stakeholders#> as stakeholders {
     @dc:description "Mandates that live feature transformation and inference take less than 500ms."
     instance latency-requirement : governance:PerformanceRequirement [
         governance:mandatedByRole data-ops-engineer
+        governance:targetsComponent comp_inst:live-fhir-streaming-pipeline
     ]
 
     @dc:title "Demographic Parity & Fairness Requirement"
     @dc:description "Mandates that sensitivity disparity across demographic cohorts remains below 5 percent."
     instance subgroup-fairness-requirement : governance:EquityRequirement [
         governance:mandatedByRole institutional-review-board
+        governance:targetsComponent comp_inst:sepsis-xgboost-model
     ]
 
     @dc:title "Clinician Workflow Override Safety Protocol"
     @dc:description "Requires formal failure-mode protocols ensuring uninterrupted clinician overrides without delay."
     instance clinical-override-safety-requirement : governance:SafetyRequirement [
         governance:mandatedByRole clinical-lead
+        governance:targetsComponent comp_inst:rapid-response-protocol
     ]
 }

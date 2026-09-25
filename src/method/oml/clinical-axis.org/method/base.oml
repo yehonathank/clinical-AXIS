@@ -1,8 +1,12 @@
 @dc:title "Clinical AXIS Base Vocabulary"
 @dc:description "Foundational aspects, traits, and universal naming properties for Clinical AXIS."
+@dc:creator "yehonathank"
+@dc:rights "CC BY 4.0"
+@owl:versionInfo "0.1.0"
 vocabulary <http://clinical-axis.org/method/base#> as base {
     extends <http://purl.org/dc/elements/1.1/> as dc
     extends <http://www.w3.org/2001/XMLSchema#> as xsd
+    extends <http://www.w3.org/2002/07/owl#> as owl
 
     @dc:description "A reusable trait for any identified entity in the system."
     aspect IdentifiedElement

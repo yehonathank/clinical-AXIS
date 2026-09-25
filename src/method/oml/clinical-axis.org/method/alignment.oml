@@ -1,0 +1,17 @@
+@dc:title "Clinical AXIS External Alignment"
+@dc:description "Qualified references from Clinical AXIS terms to SKOS, PROV-O, and the Software Ontology. External ontologies are cited by IRI. They are not imported."
+@dc:creator "yehonathank"
+@dc:rights "CC BY 4.0"
+@owl:versionInfo "0.1.0"
+vocabulary <http://clinical-axis.org/method/alignment#> as alignment {
+    extends <http://purl.org/dc/elements/1.1/> as dc
+    extends <http://www.w3.org/2002/07/owl#> as owl
+
+    @dc:description "Records a SKOS broad match. The value is the IRI of the broader external term."
+    @dc:source "http://www.w3.org/2004/02/skos/core#broadMatch"
+    annotation property broadMatch
+
+    @dc:description "Records a SKOS close match. The value is the IRI of the external term."
+    @dc:source "http://www.w3.org/2004/02/skos/core#closeMatch"
+    annotation property closeMatch
+}

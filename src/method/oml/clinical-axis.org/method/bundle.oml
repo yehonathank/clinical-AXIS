@@ -1,6 +1,7 @@
 vocabulary bundle <http://clinical-axis.org/method/bundle#> as vocab-bundle {
 
     includes <http://clinical-axis.org/method/base#>
+    includes <http://clinical-axis.org/method/alignment#>
     includes <http://clinical-axis.org/method/components#>
     includes <http://clinical-axis.org/method/lifecycle#>
     includes <http://clinical-axis.org/method/governance#>

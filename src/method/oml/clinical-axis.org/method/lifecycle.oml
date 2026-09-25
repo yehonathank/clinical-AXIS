@@ -1,9 +1,13 @@
 @dc:title "Clinical AXIS Lifecycle Vocabulary"
 @dc:description "Defines transitional lifecycle stages and chronological sequencing across the SALIENT When dimension."
+@dc:creator "yehonathank"
+@dc:rights "CC BY 4.0"
+@owl:versionInfo "0.1.0"
 vocabulary <http://clinical-axis.org/method/lifecycle#> as lifecycle {
     extends <http://purl.org/dc/elements/1.1/> as dc
     extends <http://clinical-axis.org/method/base#> as base
     extends <http://clinical-axis.org/method/components#> as components
+    extends <http://www.w3.org/2002/07/owl#> as owl
 
     /////////////////////////////////////////////////////////////////////////////
     // Sibling Taxonomies (The WHEN)

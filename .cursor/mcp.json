@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+      "oml": {
+        "command": "bash",
+        "args": ["./scripts/oml-mcp"]
+      }
+    }
+  }  

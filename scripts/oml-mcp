@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Cursor rewrites top-level `npx` to its helper Node plus whatever npm is on
+# PATH. That helper Node has no npm prefix, so npm dies with ENOENT on
+# .../Cursor.app/.../resources/lib. Never let Cursor invoke npx directly.
+
+strip_cursor_from_path() {
+  local out="" part
+  local IFS=':'
+  for part in ${PATH:-}; do
+    case "$part" in
+      *"/Cursor.app/"*|*"/.cursor/"*) continue ;;
+    esac
+    if [[ -n "$out" ]]; then
+      out="${out}:${part}"
+    else
+      out="${part}"
+    fi
+  done
+  printf '%s' "$out"
+}
+
+export PATH="$(strip_cursor_from_path)"
+unset npm_config_prefix
+
+pick_nvm_node() {
+  local versions_dir="${HOME}/.nvm/versions/node"
+  [[ -d "$versions_dir" ]] || return 1
+  local best="" d ver
+  for d in "$versions_dir"/*; do
+    ver="$(basename "$d")"
+    [[ "$ver" == v2[0-9]* || "$ver" == v[3-9]* ]] || continue
+    [[ -x "$d/bin/node" ]] || continue
+    if [[ -z "$best" || "$ver" > "$best" ]]; then
+      best="$ver"
+    fi
+  done
+  [[ -n "$best" ]] || return 1
+  printf '%s' "$versions_dir/$best/bin"
+}
+
+NVM_BIN="$(pick_nvm_node || true)"
+if [[ -n "${NVM_BIN}" ]]; then
+  export PATH="${NVM_BIN}:${PATH}"
+fi
+
+NODE="$(command -v node || true)"
+if [[ -z "${NODE}" ]]; then
+  echo "oml-mcp: no Node.js found. Install Node 20+ (nvm, Homebrew, or https://nodejs.org)." >&2
+  exit 1
+fi
+
+# Keep node and npx from the same prefix.
+export PATH="$(dirname "${NODE}"):${PATH}"
+
+exec npx -y "@oml/mcp@0.26.1" --workspace "${ROOT}" "$@"

@@ -1,16 +1,14 @@
-// TODO: Ontological Alignment (PROV-O - http://www.w3.org/ns/prov#)
-// - StakeholderRole specializes prov:Agent
-//   - TechnicalRole / ClinicalRole -> prov:Person
-//   - GovernanceBody -> prov:Organization
-// - StakeholderRequirement specializes prov:Entity (or prov:Plan / prov:Role constraints)
-// - mandatedByRole aligns to prov:wasAttributedTo
-
 @dc:title "Clinical AXIS Governance Vocabulary"
 @dc:description "Defines stakeholders (WHO) and their specific requirements and policies (WHY)."
+@dc:creator "yehonathank"
+@dc:rights "CC BY 4.0"
+@owl:versionInfo "0.1.0"
 vocabulary <http://clinical-axis.org/method/governance#> as governance {
     extends <http://purl.org/dc/elements/1.1/> as dc
     extends <http://clinical-axis.org/method/base#> as base
     extends <http://clinical-axis.org/method/components#> as components
+    extends <http://clinical-axis.org/method/alignment#> as alignment
+    extends <http://www.w3.org/2002/07/owl#> as owl
 
     /////////////////////////////////////////////////////////////////////////////
     // Sibling Taxonomies: WHO (Stakeholder Roles)
@@ -53,6 +51,7 @@ vocabulary <http://clinical-axis.org/method/governance#> as governance {
     /////////////////////////////////////////////////////////////////////////////
 
     @dc:description "Links a requirement to the stakeholder role that mandates or defines it."
+    @alignment:broadMatch "http://www.w3.org/ns/prov#wasAttributedTo"
     relation mandatedByRole [
         from StakeholderRequirement
         to StakeholderRole

@@ -1,16 +1,16 @@
-// TODO: Ontological Alignment (PROV-O - http://www.w3.org/ns/prov#)
-// - VerificationArtifact specializes prov:Entity
-// - producedByRole aligns to prov:wasAttributedTo (or prov:wasGeneratedBy -> prov:Activity)
-// - satisfiesRequirement / verifiesComponent align to prov:wasDerivedFrom
-
 @dc:title "Clinical AXIS Verification Vocabulary"
 @dc:description "Defines verification artifacts (HOW) and connects assemblies, requirements, and stage gates."
+@dc:creator "yehonathank"
+@dc:rights "CC BY 4.0"
+@owl:versionInfo "0.1.0"
 vocabulary <http://clinical-axis.org/method/verification#> as verification {
     extends <http://purl.org/dc/elements/1.1/> as dc
     extends <http://www.w3.org/2001/XMLSchema#> as xsd
     extends <http://clinical-axis.org/method/base#> as base
     extends <http://clinical-axis.org/method/components#> as components
     extends <http://clinical-axis.org/method/governance#> as governance
+    extends <http://clinical-axis.org/method/alignment#> as alignment
+    extends <http://www.w3.org/2002/07/owl#> as owl
 
     /////////////////////////////////////////////////////////////////////////////
     // Closed Enumerations
@@ -28,6 +28,7 @@ vocabulary <http://clinical-axis.org/method/verification#> as verification {
     /////////////////////////////////////////////////////////////////////////////
 
     @dc:description "A documented test report, audit log, or verification artifact (HOW)."
+    @alignment:closeMatch "http://www.w3.org/ns/prov#Entity"
     concept VerificationArtifact < base:IdentifiedElement
 
     @dc:description "Benchmark report evaluating pipeline throughput and response latency."
@@ -109,6 +110,7 @@ vocabulary <http://clinical-axis.org/method/verification#> as verification {
     ]
 
     @dc:description "Links an artifact to the role that produced it."
+    @alignment:broadMatch "http://www.w3.org/ns/prov#wasAttributedTo"
     relation producedByRole [
         from VerificationArtifact
         to governance:StakeholderRole
