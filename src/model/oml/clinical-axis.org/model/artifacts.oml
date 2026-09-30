@@ -42,6 +42,7 @@ description <http://clinical-axis.org/model/artifacts#> as artifacts {
         ver:approvedByBody sh_inst:institutional-review-board
         ver:hasVerificationStatus "VERIFIED"
         ver:isGateApproved true
+        ver:hasObservedDisparityPct 3.2
     ]
 
     @dc:title "Clinical Workflow Failure Modes & Effects Analysis (FMEA)"

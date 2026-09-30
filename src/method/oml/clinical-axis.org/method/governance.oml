@@ -5,6 +5,7 @@
 @owl:versionInfo "0.1.0"
 vocabulary <http://clinical-axis.org/method/governance#> as governance {
     extends <http://purl.org/dc/elements/1.1/> as dc
+    extends <http://www.w3.org/2001/XMLSchema#> as xsd
     extends <http://clinical-axis.org/method/base#> as base
     extends <http://clinical-axis.org/method/components#> as components
     extends <http://clinical-axis.org/method/alignment#> as alignment
@@ -67,5 +68,12 @@ vocabulary <http://clinical-axis.org/method/governance#> as governance {
         reverse hasRequirement
         asymmetric
         irreflexive
+    ]
+
+    @dc:description "Maximum allowed sensitivity disparity, in percent, for an equity requirement."
+    scalar property hasMaxDisparityPct [
+        domain EquityRequirement
+        range xsd:decimal
+        functional
     ]
 }

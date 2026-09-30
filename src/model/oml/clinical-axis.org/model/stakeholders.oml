@@ -42,6 +42,7 @@ description <http://clinical-axis.org/model/stakeholders#> as stakeholders {
     instance subgroup-fairness-requirement : governance:EquityRequirement [
         governance:mandatedByRole institutional-review-board
         governance:targetsComponent comp_inst:sepsis-xgboost-model
+        governance:hasMaxDisparityPct 5.0
     ]
 
     @dc:title "Clinician Workflow Override Safety Protocol"

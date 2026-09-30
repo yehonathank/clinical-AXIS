@@ -78,6 +78,13 @@ vocabulary <http://clinical-axis.org/method/verification#> as verification {
         functional
     ]
 
+    @dc:description "Observed sensitivity disparity, in percent, recorded by a subgroup fairness audit."
+    scalar property hasObservedDisparityPct [
+        domain SubgroupFairnessAuditReport
+        range xsd:decimal
+        functional
+    ]
+
     /////////////////////////////////////////////////////////////////////////////
     // Relations (with Irreflexive & Asymmetric Property Characteristics)
     /////////////////////////////////////////////////////////////////////////////
