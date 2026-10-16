@@ -1,0 +1,14 @@
+@dc:title "Clinical AXIS Dogfood Codegen Configs"
+@dc:description "Local codegen Config instances that exercise packaged Specs against the sepsis dogfood model. Not part of the published method package."
+description <http://clinical-axis.org/model/codegen/configs#> as configs {
+
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://opencaesar.io/codegen#> as codegen
+    extends <http://clinical-axis.org/method/codegen/gate-readiness#> as gate_readiness
+
+    instance gate : codegen:Config [
+        codegen:spec gate_readiness:GateReadinessSpec
+        codegen:context "http://clinical-axis.org/model/bundle"
+        codegen:binding [ codegen:key "path" codegen:value "build/docs" ]
+    ]
+}

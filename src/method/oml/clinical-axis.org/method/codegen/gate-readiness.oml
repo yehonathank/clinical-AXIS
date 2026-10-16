@@ -1,0 +1,212 @@
+@dc:title "Clinical AXIS Gate-Readiness Generator"
+@dc:description "Reusable Spec and Template that emit a nested gate-readiness Markdown report from ClinicalSolution assemblies."
+@dc:creator "yehonathank"
+@dc:rights "CC BY 4.0"
+description <http://clinical-axis.org/method/codegen/gate-readiness#> as gate_readiness {
+
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <http://opencaesar.io/codegen#> as codegen
+
+    instance GateReadinessSpec : codegen:Spec [
+        codegen:construct """
+            PREFIX dc:         <http://purl.org/dc/elements/1.1/>
+            PREFIX codegen:    <http://opencaesar.io/codegen#>
+            PREFIX comp:       <http://clinical-axis.org/method/components#>
+            PREFIX lifecycle:  <http://clinical-axis.org/method/lifecycle#>
+            PREFIX governance: <http://clinical-axis.org/method/governance#>
+            PREFIX ver:        <http://clinical-axis.org/method/verification#>
+            PREFIX xst:        <https://mozilla.github.io/nunjucks#>
+            PREFIX templates:  <http://clinical-axis.org/method/codegen/gate-readiness#>
+
+            CONSTRUCT {
+                ?file a codegen:File ;
+                    codegen:path ?path ;
+                    codegen:template templates:GateReadinessTemplate ;
+                    codegen:root ?solution .
+
+                ?solution a comp:ClinicalSolution ;
+                    xst:title ?solutionTitle ;
+                    xst:stage ?solutionStageTitle ;
+                    xst:technicalSystem ?tech ;
+                    xst:component ?solutionComp ;
+                    xst:artifact ?solutionArt .
+
+                ?tech a comp:TechnicalSystem ;
+                    xst:title ?techTitle ;
+                    xst:stage ?techStageTitle ;
+                    xst:component ?techComp ;
+                    xst:artifact ?techArt .
+
+                ?solutionComp a xst:Component ;
+                    xst:title ?solutionCompTitle ;
+                    xst:requirement ?solutionReq .
+
+                ?techComp a xst:Component ;
+                    xst:title ?techCompTitle ;
+                    xst:requirement ?techReq .
+
+                ?solutionReq a xst:Requirement ;
+                    xst:title ?solutionReqTitle ;
+                    xst:role ?solutionRoleTitle .
+
+                ?techReq a xst:Requirement ;
+                    xst:title ?techReqTitle ;
+                    xst:role ?techRoleTitle .
+
+                ?solutionArt a xst:Artifact ;
+                    xst:title ?solutionArtTitle ;
+                    xst:status ?solutionArtStatus ;
+                    xst:approved ?solutionArtApproved ;
+                    xst:body ?solutionBodyTitle ;
+                    xst:verifiedComponent ?solutionArtCompTitle ;
+                    xst:satisfiedRequirement ?solutionArtReqTitle .
+
+                ?techArt a xst:Artifact ;
+                    xst:title ?techArtTitle ;
+                    xst:status ?techArtStatus ;
+                    xst:approved ?techArtApproved ;
+                    xst:body ?techBodyTitle ;
+                    xst:verifiedComponent ?techArtCompTitle ;
+                    xst:satisfiedRequirement ?techArtReqTitle .
+            }
+            WHERE {
+                ?solution a comp:ClinicalSolution .
+                BIND(REPLACE(STR(?solution), "^.*[/#]", "") AS ?solutionName)
+                BIND(IRI(CONCAT("urn:file:gate-readiness:", ?solutionName)) AS ?file)
+                BIND(CONCAT("${path}/", ?solutionName, "-gate-readiness.md") AS ?path)
+                OPTIONAL { ?solution dc:title ?solutionTitle }
+                OPTIONAL {
+                    ?solution lifecycle:evaluatedAtStage ?solutionStage .
+                    OPTIONAL { ?solutionStage dc:title ?solutionStageTitle }
+                }
+
+                OPTIONAL {
+                    ?solution comp:incorporatesTechnicalSystem ?tech .
+                    OPTIONAL { ?tech dc:title ?techTitle }
+                    OPTIONAL {
+                        ?tech lifecycle:evaluatedAtStage ?techStage .
+                        OPTIONAL { ?techStage dc:title ?techStageTitle }
+                    }
+                    OPTIONAL {
+                        ?tech comp:aggregatesComponent ?techComp .
+                        OPTIONAL { ?techComp dc:title ?techCompTitle }
+                        OPTIONAL {
+                            ?techReq governance:targetsComponent ?techComp .
+                            OPTIONAL { ?techReq dc:title ?techReqTitle }
+                            OPTIONAL {
+                                ?techReq governance:mandatedByRole ?techRole .
+                                OPTIONAL { ?techRole dc:title ?techRoleTitle }
+                            }
+                        }
+                    }
+                    OPTIONAL {
+                        ?tech ver:requiresArtifact ?techArt .
+                        OPTIONAL { ?techArt dc:title ?techArtTitle }
+                        OPTIONAL { ?techArt ver:hasVerificationStatus ?techArtStatus }
+                        OPTIONAL { ?techArt ver:isGateApproved ?techArtApproved }
+                        OPTIONAL {
+                            ?techArt ver:approvedByBody ?techBody .
+                            OPTIONAL { ?techBody dc:title ?techBodyTitle }
+                        }
+                        OPTIONAL {
+                            ?techArt ver:verifiesComponent ?techArtComp .
+                            OPTIONAL { ?techArtComp dc:title ?techArtCompTitle }
+                        }
+                        OPTIONAL {
+                            ?techArt ver:satisfiesRequirement ?techArtReq .
+                            OPTIONAL { ?techArtReq dc:title ?techArtReqTitle }
+                        }
+                    }
+                }
+
+                OPTIONAL {
+                    ?solution comp:aggregatesComponent ?solutionComp .
+                    OPTIONAL { ?solutionComp dc:title ?solutionCompTitle }
+                    OPTIONAL {
+                        ?solutionReq governance:targetsComponent ?solutionComp .
+                        OPTIONAL { ?solutionReq dc:title ?solutionReqTitle }
+                        OPTIONAL {
+                            ?solutionReq governance:mandatedByRole ?solutionRole .
+                            OPTIONAL { ?solutionRole dc:title ?solutionRoleTitle }
+                        }
+                    }
+                }
+
+                OPTIONAL {
+                    ?solution ver:requiresArtifact ?solutionArt .
+                    OPTIONAL { ?solutionArt dc:title ?solutionArtTitle }
+                    OPTIONAL { ?solutionArt ver:hasVerificationStatus ?solutionArtStatus }
+                    OPTIONAL { ?solutionArt ver:isGateApproved ?solutionArtApproved }
+                    OPTIONAL {
+                        ?solutionArt ver:approvedByBody ?solutionBody .
+                        OPTIONAL { ?solutionBody dc:title ?solutionBodyTitle }
+                    }
+                    OPTIONAL {
+                        ?solutionArt ver:verifiesComponent ?solutionArtComp .
+                        OPTIONAL { ?solutionArtComp dc:title ?solutionArtCompTitle }
+                    }
+                    OPTIONAL {
+                        ?solutionArt ver:satisfiesRequirement ?solutionArtReq .
+                        OPTIONAL { ?solutionArtReq dc:title ?solutionArtReqTitle }
+                    }
+                }
+            }
+        """
+        codegen:parameter "path"
+    ]
+
+    instance GateReadinessTemplate : codegen:Template [
+        codegen:body """
+            {%- set solution = object(file, "codegen:root") -%}
+            # Gate-Readiness Report: {{ object(solution, "xst:title") or "(unnamed solution)" }}
+
+            **Lifecycle stage:** {{ object(solution, "xst:stage") or "(not evaluated)" }}
+
+            ## Technical systems
+
+            {%- for tech in objects(solution, "xst:technicalSystem") %}
+            ### {{ object(tech, "xst:title") or "(unnamed technical system)" }}
+
+            **Lifecycle stage:** {{ object(tech, "xst:stage") or "(not evaluated)" }}
+
+            #### Components
+
+            | Component | Mandated requirements |
+            | --- | --- |
+            {%- for c in objects(tech, "xst:component") %}
+            | {{ object(c, "xst:title") or "(unnamed)" }} | {% for r in objects(c, "xst:requirement") %}{{ object(r, "xst:title") or "(unnamed)" }} ({{ object(r, "xst:role") or "unspecified role" }}){% if not loop.last %}; {% endif %}{% else %}—{% endfor %} |
+            {%- endfor %}
+
+            #### Verification artifacts
+
+            | Artifact | Status | Gate approved | Approved by | Verifies | Satisfies |
+            | --- | --- | --- | --- | --- | --- |
+            {%- for a in objects(tech, "xst:artifact") %}
+            | {{ object(a, "xst:title") or "(unnamed)" }} | {{ object(a, "xst:status") or "—" }} | {{ object(a, "xst:approved") if object(a, "xst:approved") is not none else "—" }} | {{ object(a, "xst:body") or "—" }} | {{ object(a, "xst:verifiedComponent") or "—" }} | {{ object(a, "xst:satisfiedRequirement") or "—" }} |
+            {%- endfor %}
+            {%- else %}
+            _(No technical systems incorporated.)_
+            {%- endfor %}
+
+            ## Solution-level components
+
+            | Component | Mandated requirements |
+            | --- | --- |
+            {%- for c in objects(solution, "xst:component") %}
+            | {{ object(c, "xst:title") or "(unnamed)" }} | {% for r in objects(c, "xst:requirement") %}{{ object(r, "xst:title") or "(unnamed)" }} ({{ object(r, "xst:role") or "unspecified role" }}){% if not loop.last %}; {% endif %}{% else %}—{% endfor %} |
+            {%- else %}
+            | — | — |
+            {%- endfor %}
+
+            ## Solution-level verification artifacts
+
+            | Artifact | Status | Gate approved | Approved by | Verifies | Satisfies |
+            | --- | --- | --- | --- | --- | --- |
+            {%- for a in objects(solution, "xst:artifact") %}
+            | {{ object(a, "xst:title") or "(unnamed)" }} | {{ object(a, "xst:status") or "—" }} | {{ object(a, "xst:approved") if object(a, "xst:approved") is not none else "—" }} | {{ object(a, "xst:body") or "—" }} | {{ object(a, "xst:verifiedComponent") or "—" }} | {{ object(a, "xst:satisfiedRequirement") or "—" }} |
+            {%- else %}
+            | — | — | — | — | — | — |
+            {%- endfor %}
+        """
+    ]
+}

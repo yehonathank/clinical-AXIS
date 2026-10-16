@@ -8,13 +8,15 @@ This is an [OML](https://www.modelware.io/) project.
 
 1. Open this folder in VS Code with the **OML Code** extension installed.
 2. Run `oml lint` to check the model for errors.
-3. Edit the OML files under `src/oml/` to build out your model.
+3. Edit OML under `src/method` (vocabularies) and `src/model` (dogfood descriptions).
 
 ## Commands
 
 - `oml lint` — lint OML files and report any problems
 - `oml start` — start the OML server
 - `oml export -o build/owl` — export OWL files
+- `oml codegen -c gate` — generate the dogfood gate-readiness report
+- `oml pack` / `oml publish -r http://localhost:4873` — package and publish `axis`
 
 ## System Overview
 This repository contains the ontological model for the **Clinical AXIS** framework, implementing a multi-dimensional system architecture across the **SALIENT** and **Stead** lifecycle frameworks:
@@ -25,28 +27,23 @@ This repository contains the ontological model for the **Clinical AXIS** framewo
 - **HOW**: Verification artifacts, test reports, and stage-gate approval deliverables.
 
 ## Directory Structure
-- `src/method/oml/clinical-axis.org/method/`: Vocabulary modules
-  - `base.oml`: Foundational identifiers and core aspects
-  - `components.oml`: Atomic components and assembly concepts
-  - `lifecycle.oml`: 5-stage lifecycle taxonomy and sequencing relations
-  - `governance.oml`: Stakeholder roles and requirements
-  - `verification.oml`: Verification artifacts, rules, and defined concepts
-  - `bundle.oml`: Method vocabulary bundle
-- `src/model/oml/clinical-axis.org/model/`: Concrete description modules
-  - `stakeholders.oml`: Concrete stakeholder and requirement instances
-  - `stages.oml`: Concrete lifecycle stage instances (Stages I–V)
-  - `components.oml`: Sepsis inference model, pipelines, and clinical workflow
-  - `artifacts.oml`: Verification reports, latency benchmarks, and fairness audits
-  - `assemblies.oml`: Integrated assemblies and traceability chains
-  - `bundle.oml`: System description bundle aggregating all instances
+- `src/method/`: Packaged methodology (`pack.include: [src/method]`)
+  - `oml/clinical-axis.org/method/`: Vocabulary modules + `codegen/gate-readiness.oml`
+  - `md/clinical-axis.org/method/`: Compose editor templates (assemblies, verification)
+- `src/model/oml/clinical-axis.org/model/`: Sepsis dogfood descriptions + local codegen Config
+- `src/analysis/`: Review notebooks (not packaged)
 
-## How to Build & Validate
-To verify syntax and lint rules:
+## Pack, publish, generate
 ```bash
-oml lint
+oml pack                                          # → build/dist/axis-0.1.0.tgz
+oml publish -r http://localhost:4873              # Verdaccio
+oml codegen -c gate                               # → build/docs/*-gate-readiness.md
 ```
 
-To run OWL reasoner classification, rule evaluation, and consistency checks:
+An independent consumer that installs `axis@0.1.0` lives in sibling repo `clinical-AXIS-example`.
+
+## How to Build & Validate
 ```bash
+oml lint
 oml reason -e
 ```

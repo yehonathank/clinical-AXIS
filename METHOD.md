@@ -9,6 +9,8 @@ An author prepares a deployment for a gate review by following four patterns, in
 
 The derived link from an assembly to a requirement (`AssemblyFulfillsRequirement`) stays a vocabulary rule. It records a consequence. It does not tell an author that a signed gate is incomplete.
 
+**Gate-readiness generator.** The packaged Spec `GateReadinessSpec` walks each `ClinicalSolution`, nests incorporated technical systems and aggregated components, joins mandated requirements and verification artifacts, and emits a Markdown gate packet via `GateReadinessTemplate`. Authors compose assemblies and artifacts with the method editor templates under `src/method/md/`. Local dogfood Config `gate` (under `src/model/.../codegen/`) exercises the Spec; consumers declare their own Config against the installed package.
+
 This dogfood is one sepsis deployment used to try the editors. It is not a claim that every clinical AI program has these five stages, these roles, or this evidence set.
 
 The identifiers under `http://clinical-axis.org/` are not a persistent resolver, so the vocabulary is not yet findable or retrievable by those IRIs. What was done to meet FAIR and CARE, what was refused, and what is still open, is recorded in [FAIR_CARE.md](FAIR_CARE.md).
