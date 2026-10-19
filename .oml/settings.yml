@@ -29,3 +29,5 @@ pack:
 # command line). Works for any oml command; key by command name.
 defaults:
   pack: -o build/dist
+  render: -m src/analysis -b build/web -c src/model/oml/clinical-axis.org/model/bundle.oml
+

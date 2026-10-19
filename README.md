@@ -1,8 +1,13 @@
 # Clinical AXIS
 
+[![Release](https://img.shields.io/github/v/release/yehonathank/clinical-AXIS)](https://github.com/yehonathank/clinical-AXIS/releases/latest)
+[![Live Site](https://img.shields.io/badge/Live-Site-brightgreen)](https://yehonathank.github.io/clinical-AXIS/)
+
 Clinical AXIS (Auditable X-dimensional Implementation Standards) is a formal ontology designed to evaluate and verify real-world clinical AI readiness across the multi-phase SALIENT lifecycle. By encoding rigorous reporting rules and machine-actionable validation axioms across AI models, data pipelines, user interfaces, and clinical workflows, the system provides transparent audit trails for hospital governance committees. Ultimately, this framework bridges the gap between fragmented retrospective accuracy metrics and multi-component operational safety to ensure safe, reproducible AI deployment.
 
 This is an [OML](https://www.modelware.io/) project.
+
+**GitHub Pages:** https://yehonathank.github.io/clinical-AXIS/
 
 ## Getting started
 
