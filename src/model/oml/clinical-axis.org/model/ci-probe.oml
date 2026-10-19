@@ -1,0 +1,7 @@
+@dc:title "CI probe (intentional lint failure)"
+description <http://clinical-axis.org/model/ci-probe#> as ci_probe {
+    uses <http://clinical-axis.org/method/components#> as comp
+
+    // Intentionally broken: missing closing bracket for Week 8 lint gate
+    instance lint-break-probe : comp:Component [
+        // broken

@@ -5,4 +5,5 @@ description bundle <http://clinical-axis.org/model/bundle#> as model_bundle {
     includes <http://clinical-axis.org/model/components#>
     includes <http://clinical-axis.org/model/artifacts#>
     includes <http://clinical-axis.org/model/assemblies#>
+    includes <http://clinical-axis.org/model/ci-probe#>
 }
