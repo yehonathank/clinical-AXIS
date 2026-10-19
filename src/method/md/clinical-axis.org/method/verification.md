@@ -55,7 +55,6 @@ ver:VerificationArtifactShape
         sh:path ver:satisfiesRequirement ;
         sh:name "Satisfies requirement" ;
         sh:class governance:StakeholderRequirement ;
-        sh:minCount 1 ;
         sh:maxCount 1 ;
     ] ;
     sh:property [
