@@ -1,8 +1,8 @@
-@dc:title "CI probe (lint fixed; validate should fail)"
+@dc:title "CI probe (lint clean; validate should fail)"
 description <http://clinical-axis.org/model/ci-probe#> as ci_probe {
     uses <http://purl.org/dc/elements/1.1/> as dc
     uses <http://clinical-axis.org/method/components#> as comp
 
     @dc:title "CI Validate Probe Component"
-    instance validate-break-probe : comp:Component
+    instance validate-break-probe : comp:SalientComponent
 }
