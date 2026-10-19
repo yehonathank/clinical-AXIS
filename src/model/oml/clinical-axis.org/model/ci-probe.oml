@@ -1,7 +1,8 @@
-@dc:title "CI probe (intentional lint failure)"
+@dc:title "CI probe (lint fixed; validate should fail)"
 description <http://clinical-axis.org/model/ci-probe#> as ci_probe {
+    uses <http://purl.org/dc/elements/1.1/> as dc
     uses <http://clinical-axis.org/method/components#> as comp
 
-    // Intentionally broken: missing closing bracket for Week 8 lint gate
-    instance lint-break-probe : comp:Component [
-        // broken
+    @dc:title "CI Validate Probe Component"
+    instance validate-break-probe : comp:Component
+}
