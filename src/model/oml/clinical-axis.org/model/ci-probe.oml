@@ -1,9 +1,0 @@
-@dc:title "CI probe component (present during validate-gate demo)"
-description <http://clinical-axis.org/model/ci-probe#> as ci_probe {
-    uses <http://purl.org/dc/elements/1.1/> as dc
-    uses <http://clinical-axis.org/method/components#> as comp
-
-    @dc:title "CI Validate Probe Component"
-    @dc:description "Probe instance retained while the verification shape enforces satisfiesRequirement."
-    instance validate-break-probe : comp:SalientComponent
-}
